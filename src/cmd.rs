@@ -1,13 +1,8 @@
 use std::process;
 use std::io::prelude::*;
+use std::fs;
 use std::fs::File;
 
-
-#[derive(Debug)]
-pub enum Command {
-    Invalid,
-    Execute { remote_ip: String }
-}
 
 pub fn read_command() {
     // Pull version information out of Cargo.toml
@@ -23,9 +18,13 @@ pub fn read_command() {
         (author: env!("CARGO_PKG_AUTHORS"))
         (about: env!("CARGO_PKG_DESCRIPTION"))
         (@arg remote_ip: +required "IP adress of the 'xMZ-Mod-Touch'")
+        (@arg keep_image: -i --image "Keep image file")
+        (@arg keep_raw: -r --raw "Keep raw image file")
     ).get_matches();
 
     if let Some(ip) = matches.value_of("remote_ip") {
+        // connect via ssh to the given remote ip and call `cat /dev/fb0` the stdout is later then
+        // "piped" in an file
         let mut buffer = File::create("framebuffer.img").unwrap();
         let output = process::Command::new("ssh")
                                 .args(&["-i", "~/development/custom_image/id_rsa", format!("root@{}", ip).as_str(), "cat", "/dev/fb0"])
@@ -36,7 +35,7 @@ pub fn read_command() {
 
         // Convert raw framebuffer to an graphical image file
         let output = process::Command::new("avconv")
-                                .args(&["-f", "rawvideo", "-pix_fmt", "rgb0", "-s", "1024x600", "-i", "framebuffer.img", "framebuffer.png", "-y"])
+                                .args(&["-f", "rawvideo", "-pix_fmt", "bgr0", "-s", "1024x600", "-i", "framebuffer.img", "framebuffer.png", "-y"])
                                 .output()
                                 .expect("failed to convert framebuffer to graphical image file");
 
@@ -45,8 +44,19 @@ pub fn read_command() {
         // Show image
         let _ = process::Command::new("display")
                                 .arg("framebuffer.png")
-                                .spawn()
+                                .output()
                                 .expect("framebuffer.png could not shown by display");
+
+        // If keep_image parameter (-i, default not set) is not set delete the image
+        if !matches.is_present("keep_image") {
+            fs::remove_file("framebuffer.png");
+        }
+
+        // If keep_raw parameter (-r, default not set) is not set delete the image
+        if !matches.is_present("keep_raw") {
+            fs::remove_file("framebuffer.img");
+        }
+
 
     }
 }
