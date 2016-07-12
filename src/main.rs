@@ -1,9 +1,8 @@
-// export xmz_ip=192.168.89.101
-//
-// cd /tmp
-// ssh -i ~/development/custom_image/id_rsa root@$xmz_ip cat /dev/fb0 > framebuffer.img
-// avconv -f rawvideo -pix_fmt rgb0 -s 1024x600 -i framebuffer.img framebuffer.png -y
-// display framebuffer.png
+#![doc(html_logo_url = "https://raw.githubusercontent.com/zzeroo/xmz-snapshot/master/share/xmz-logo.png",
+       html_favicon_url = "https://raw.githubusercontent.com/zzeroo/xmz-snapshot/master/share/favicon.ico",
+       html_root_url = "https://gaswarnanlagen.com/")]
+#![feature(stmt_expr_attributes)]
+
 #[macro_use] extern crate clap;
 
 mod cmd;
