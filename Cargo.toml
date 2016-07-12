@@ -2,6 +2,7 @@
 name = "xmz-snapshot"
 version = "0.1.0"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
+description = "Make screenshots from 'xMZ-Mod-Touch' platform"
 
 [dependencies]
-clap = "*"
+clap = { version = "*", features = ["unstable"] }
