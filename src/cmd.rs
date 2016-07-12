@@ -49,12 +49,12 @@ pub fn read_command() {
 
         // If keep_image parameter (-i, default not set) is not set delete the image
         if !matches.is_present("keep_image") {
-            fs::remove_file("framebuffer.png");
+            let _ = fs::remove_file("framebuffer.png");
         }
 
         // If keep_raw parameter (-r, default not set) is not set delete the image
         if !matches.is_present("keep_raw") {
-            fs::remove_file("framebuffer.img");
+            let _ = fs::remove_file("framebuffer.img");
         }
 
 
