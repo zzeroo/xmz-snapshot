@@ -14,4 +14,4 @@ keywords = ["xmz", "tool", "xMZ-Mod-Touch"]
 license = "GPL-2.0"
 
 [dependencies]
-clap = { version = "*", features = ["unstable"] }
+clap = { version = "2", features = ["unstable"] }
